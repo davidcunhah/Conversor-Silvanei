@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Universal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Conversor Universal</h1>
+    </header>
+
+    <main>
+        <section class="conversor-container">
+            <!-- O uso de form, label e button é obrigatório -->
+            <form id="form-conversor">
+                <label for="valor">Digite o valor:</label>
+                <input type="number" id="valor" placeholder="Ex: 100" required>
+
+                <label for="tipo-conversao">Escolha a conversão:</label>
+                <select id="tipo-conversao">
+                    <option value="c-to-f">Celsius para Fahrenheit</option>
+                    <option value="km-to-mi">Quilômetros para Milhas</option>
+                </select>
+
+                <button type="button" id="btn-converter">Converter</button>
+            </form>
+
+            <article id="resultado-box">
+                <h2>Resultado:</h2>
+                <p id="resultado-texto">Aguardando conversão...</p>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>Desenvolvido para o Trabalho Prático de Web</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
