@@ -4,54 +4,94 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Conversor de Unidades</title>
-  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
 </head>
-<body>
-  <main class="container">
-    <header class="header">
-      <h1>Conversor de Unidades</h1>
-      <p>Temperatura (°C, °F) e Distância (m, km, mi)</p>
+<body class="min-h-screen bg-gradient-to-br from-violet-700 via-indigo-700 to-fuchsia-600 text-slate-900 antialiased selection:bg-fuchsia-500/20 selection:text-fuchsia-900 flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden">
+  <!-- Orbes luminosos de fundo para reforçar o degradê moderno -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden -z-10" aria-hidden="true">
+    <div class="absolute -top-24 -left-20 w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-pink-400/25 blur-3xl"></div>
+    <div class="absolute top-1/3 -right-24 w-80 h-80 sm:w-96 sm:h-96 rounded-full bg-sky-400/20 blur-3xl"></div>
+    <div class="absolute -bottom-28 left-1/3 w-96 h-96 rounded-full bg-purple-300/20 blur-3xl"></div>
+  </div>
+
+  <main class="w-full max-w-xl">
+    <!-- Cabeçalho sobre o degradê -->
+    <header class="text-center mb-5 sm:mb-6 text-white">
+      <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold tracking-wide bg-white/15 backdrop-blur-md border border-white/25 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-pink-300 animate-pulse"></span>
+        Temperatura &amp; Distância
+      </span>
+      <h1 class="mt-3 text-2xl sm:text-4xl font-extrabold tracking-tight drop-shadow-sm">
+        Conversor de Unidades
+      </h1>
+      <p class="mt-1.5 text-sm sm:text-base text-white/85">
+        Converta entre °C, °F, metros, quilômetros e milhas em tempo real.
+      </p>
     </header>
 
-    <section class="card" aria-label="Conversor de unidades">
-      <div class="input-group">
-        <label for="valor-entrada">Valor</label>
-        <input
-          type="number"
-          id="valor-entrada"
-          step="any"
-          placeholder="Digite um número..."
-          value="25"
-        />
-      </div>
-
-      <div class="selectors-row">
-        <div class="select-group">
-          <label for="unidade-origem">De</label>
-          <select id="unidade-origem">
-            <option value="c">Celsius (°C)</option>
-            <option value="f">Fahrenheit (°F)</option>
+    <!-- Card branco translúcido com sombra suave -->
+    <section
+      aria-label="Calculadora de conversão de unidades"
+      class="bg-white/90 backdrop-blur-xl border border-white/70 rounded-3xl p-5 sm:p-7 shadow-[0_24px_60px_-15px_rgba(30,15,75,0.45)] space-y-5"
+    >
+      <!-- Seleção de origem, botão inverter e destino -->
+      <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-end gap-3">
+        <!-- Unidade de origem -->
+        <div>
+          <label for="fromUnit" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+            De (Origem)
+          </label>
+          <select
+            id="fromUnit"
+            class="w-full rounded-2xl bg-white/95 border border-slate-200 px-3.5 py-3 text-sm sm:text-base font-semibold text-slate-800 shadow-xs focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition cursor-pointer"
+          >
+            <option value="C">Celsius (°C)</option>
+            <option value="F">Fahrenheit (°F)</option>
             <option value="m">Metros (m)</option>
             <option value="km">Quilômetros (km)</option>
             <option value="mi">Milhas (mi)</option>
           </select>
         </div>
 
-        <button
-          type="button"
-          id="btn-inverter"
-          class="swap-btn"
-          title="Inverter unidades"
-          aria-label="Inverter unidades de origem e destino"
-        >
-          ⇄
-        </button>
+        <!-- Botão de inverter unidades com degradê roxo para azul/magenta -->
+        <div class="flex justify-center">
+          <button
+            type="button"
+            id="swapBtn"
+            title="Inverter unidades de origem e destino"
+            aria-label="Inverter unidades de origem e destino"
+            class="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-fuchsia-600 hover:from-violet-500 hover:via-indigo-500 hover:to-fuchsia-500 active:scale-95 text-white font-semibold text-sm shadow-md shadow-indigo-500/30 transition cursor-pointer w-full sm:w-auto min-w-[3.25rem]"
+          >
+            <span aria-hidden="true" class="text-base leading-none">⇄</span>
+            <span class="sm:hidden">Inverter</span>
+          </button>
+        </div>
 
-        <div class="select-group">
-          <label for="unidade-destino">Para</label>
-          <select id="unidade-destino">
-            <option value="f" selected>Fahrenheit (°F)</option>
-            <option value="c">Celsius (°C)</option>
+        <!-- Unidade de destino -->
+        <div>
+          <label for="toUnit" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+            Para (Destino)
+          </label>
+          <select
+            id="toUnit"
+            class="w-full rounded-2xl bg-white/95 border border-slate-200 px-3.5 py-3 text-sm sm:text-base font-semibold text-slate-800 shadow-xs focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition cursor-pointer"
+          >
+            <option value="C">Celsius (°C)</option>
+            <option value="F" selected>Fahrenheit (°F)</option>
             <option value="m">Metros (m)</option>
             <option value="km">Quilômetros (km)</option>
             <option value="mi">Milhas (mi)</option>
@@ -59,25 +99,361 @@
         </div>
       </div>
 
-      <div class="result-box" id="resultado-box" aria-live="polite">
-        <span class="result-label">Resultado</span>
-        <div class="result-value" id="valor-resultado">77 °F</div>
-        <div class="result-formula" id="formula-texto">Fórmula: (°C × 9/5) + 32</div>
+      <!-- Campo de entrada do valor -->
+      <div>
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <label for="inputValue" class="block text-xs font-bold uppercase tracking-wider text-slate-600">
+            Valor a converter
+          </label>
+          <button
+            type="button"
+            id="clearBtn"
+            class="text-xs font-semibold text-violet-700 hover:text-fuchsia-600 px-2.5 py-1 rounded-lg hover:bg-violet-50 transition cursor-pointer"
+          >
+            Limpar
+          </button>
+        </div>
+        <div class="relative flex items-center">
+          <input
+            type="number"
+            id="inputValue"
+            step="any"
+            value="25"
+            placeholder="Digite um valor..."
+            class="w-full rounded-2xl bg-white border border-slate-200 pl-4 pr-16 py-3.5 text-lg sm:text-xl font-bold text-slate-900 placeholder-slate-400 shadow-xs focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition"
+          />
+          <span
+            id="unitBadge"
+            class="absolute right-3 px-3 py-1 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs sm:text-sm font-bold shadow-xs"
+          >
+            °C
+          </span>
+        </div>
       </div>
 
-      <div class="presets">
-        <span class="presets-label">Atalhos rápidos:</span>
-        <div class="presets-list">
-          <button type="button" class="preset-btn" data-val="0" data-from="c" data-to="f">0 °C → °F</button>
-          <button type="button" class="preset-btn" data-val="100" data-from="c" data-to="f">100 °C → °F</button>
-          <button type="button" class="preset-btn" data-val="1" data-from="km" data-to="mi">1 km → mi</button>
-          <button type="button" class="preset-btn" data-val="1" data-from="mi" data-to="km">1 mi → km</button>
-          <button type="button" class="preset-btn" data-val="1000" data-from="m" data-to="km">1000 m → km</button>
+      <!-- Área de resultado ou aviso de incompatibilidade -->
+      <div
+        id="resultBox"
+        aria-live="polite"
+        class="rounded-2xl bg-gradient-to-r from-violet-600/10 via-indigo-600/10 to-fuchsia-600/10 border border-violet-200/90 p-4 sm:p-5 transition"
+      >
+        <div id="validState">
+          <span class="block text-[11px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-violet-700 via-indigo-700 to-fuchsia-700 bg-clip-text text-transparent">
+            Resultado convertido
+          </span>
+          <div id="resultValue" class="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight break-words">
+            77 °F
+          </div>
+          <div class="mt-2.5 pt-2.5 border-t border-violet-200/70 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-slate-600">
+            <div>
+              <span class="font-semibold text-slate-800">Fórmula:</span>
+              <span id="formulaText" class="ml-1 font-mono text-violet-800">(°C × 9/5) + 32</span>
+            </div>
+            <span id="calculationText" class="font-mono text-slate-500">
+              (25 × 1.8) + 32 = 77
+            </span>
+          </div>
+        </div>
+
+        <!-- Aviso amigável quando temperatura e distância são misturadas -->
+        <div id="incompatibleState" class="hidden space-y-3" role="alert">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-xs font-bold shrink-0">
+              !
+            </span>
+            <div>
+              <p id="incompatibleTitle" class="text-sm font-bold text-slate-900">
+                Grandezas incompatíveis
+              </p>
+              <p id="incompatibleDesc" class="mt-0.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                Não é possível converter temperatura diretamente em distância.
+              </p>
+            </div>
+          </div>
+          <div id="quickFixButtons" class="flex flex-wrap gap-2 pl-0 sm:pl-9"></div>
+        </div>
+      </div>
+
+      <!-- Atalhos rápidos -->
+      <div class="pt-1">
+        <p class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
+          Atalhos rápidos
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            data-preset="25|C|F"
+            class="preset-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white hover:bg-gradient-to-r hover:from-violet-600 hover:via-indigo-600 hover:to-fuchsia-600 text-slate-700 hover:text-white border border-slate-200 hover:border-transparent shadow-2xs hover:shadow-md hover:shadow-indigo-500/25 transition cursor-pointer"
+          >
+            25 °C → °F
+          </button>
+          <button
+            type="button"
+            data-preset="100|F|C"
+            class="preset-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white hover:bg-gradient-to-r hover:from-violet-600 hover:via-indigo-600 hover:to-fuchsia-600 text-slate-700 hover:text-white border border-slate-200 hover:border-transparent shadow-2xs hover:shadow-md hover:shadow-indigo-500/25 transition cursor-pointer"
+          >
+            100 °F → °C
+          </button>
+          <button
+            type="button"
+            data-preset="1500|m|km"
+            class="preset-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white hover:bg-gradient-to-r hover:from-violet-600 hover:via-indigo-600 hover:to-fuchsia-600 text-slate-700 hover:text-white border border-slate-200 hover:border-transparent shadow-2xs hover:shadow-md hover:shadow-indigo-500/25 transition cursor-pointer"
+          >
+            1500 m → km
+          </button>
+          <button
+            type="button"
+            data-preset="5|km|mi"
+            class="preset-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white hover:bg-gradient-to-r hover:from-violet-600 hover:via-indigo-600 hover:to-fuchsia-600 text-slate-700 hover:text-white border border-slate-200 hover:border-transparent shadow-2xs hover:shadow-md hover:shadow-indigo-500/25 transition cursor-pointer"
+          >
+            5 km → mi
+          </button>
+          <button
+            type="button"
+            data-preset="10|mi|km"
+            class="preset-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white hover:bg-gradient-to-r hover:from-violet-600 hover:via-indigo-600 hover:to-fuchsia-600 text-slate-700 hover:text-white border border-slate-200 hover:border-transparent shadow-2xs hover:shadow-md hover:shadow-indigo-500/25 transition cursor-pointer"
+          >
+            10 mi → km
+          </button>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script>
+    /**
+     * Catálogo de unidades suportadas agrupadas por grandeza física.
+     */
+    const UNITS = {
+      C: { key: 'C', name: 'Celsius', symbol: '°C', category: 'temperature', label: 'temperatura' },
+      F: { key: 'F', name: 'Fahrenheit', symbol: '°F', category: 'temperature', label: 'temperatura' },
+      m: { key: 'm', name: 'Metros', symbol: 'm', category: 'distance', label: 'distância' },
+      km: { key: 'km', name: 'Quilômetros', symbol: 'km', category: 'distance', label: 'distância' },
+      mi: { key: 'mi', name: 'Milhas', symbol: 'mi', category: 'distance', label: 'distância' },
+    };
+
+    const METERS_PER_KM = 1000;
+    const METERS_PER_MILE = 1609.344;
+
+    // Elementos do DOM
+    const fromUnitEl = document.getElementById('fromUnit');
+    const toUnitEl = document.getElementById('toUnit');
+    const swapBtnEl = document.getElementById('swapBtn');
+    const inputValueEl = document.getElementById('inputValue');
+    const clearBtnEl = document.getElementById('clearBtn');
+    const unitBadgeEl = document.getElementById('unitBadge');
+
+    const resultBoxEl = document.getElementById('resultBox');
+    const validStateEl = document.getElementById('validState');
+    const incompatibleStateEl = document.getElementById('incompatibleState');
+
+    const resultValueEl = document.getElementById('resultValue');
+    const formulaTextEl = document.getElementById('formulaText');
+    const calculationTextEl = document.getElementById('calculationText');
+
+    const incompatibleTitleEl = document.getElementById('incompatibleTitle');
+    const incompatibleDescEl = document.getElementById('incompatibleDesc');
+    const quickFixButtonsEl = document.getElementById('quickFixButtons');
+
+    const presetButtonsEl = document.querySelectorAll('.preset-btn');
+
+    /**
+     * Formata um número para exibição limpa em pt-BR evitando ruído de ponto flutuante.
+     */
+    function formatDisplayNumber(num) {
+      if (!Number.isFinite(num)) return '0';
+      const clean = Object.is(num, -0) || Math.abs(num) < 1e-12 ? 0 : num;
+      const rounded = Number(clean.toPrecision(10));
+      return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 6 }).format(rounded);
+    }
+
+    /**
+     * Formata um número compacto para exibição na expressão matemática.
+     */
+    function formatMathNumber(num) {
+      if (!Number.isFinite(num)) return '0';
+      const clean = Object.is(num, -0) || Math.abs(num) < 1e-12 ? 0 : num;
+      return String(Number(clean.toPrecision(8)));
+    }
+
+    /**
+     * Calcula a conversão entre duas unidades compatíveis da mesma grandeza.
+     */
+    function convertUnits(value, fromKey, toKey) {
+      const from = UNITS[fromKey];
+      const to = UNITS[toKey];
+
+      if (fromKey === toKey) {
+        return {
+          result: value,
+          formula: `Mesma unidade (${from.symbol})`,
+          calculation: `${formatMathNumber(value)} ${from.symbol} = ${formatMathNumber(value)} ${to.symbol}`,
+        };
+      }
+
+      if (from.category === 'temperature') {
+        if (fromKey === 'C' && toKey === 'F') {
+          const converted = (value * 9) / 5 + 32;
+          return {
+            result: converted,
+            formula: '(°C × 9/5) + 32',
+            calculation: `(${formatMathNumber(value)} × 1.8) + 32 = ${formatMathNumber(converted)}`,
+          };
+        }
+
+        const converted = ((value - 32) * 5) / 9;
+        return {
+          result: converted,
+          formula: '(°F − 32) × 5/9',
+          calculation: `(${formatMathNumber(value)} − 32) × 5/9 = ${formatMathNumber(converted)}`,
+        };
+      }
+
+      // Conversão de distância usando metros como unidade base intermediária
+      let meters = value;
+      if (fromKey === 'km') meters = value * METERS_PER_KM;
+      if (fromKey === 'mi') meters = value * METERS_PER_MILE;
+
+      let converted = meters;
+      if (toKey === 'km') converted = meters / METERS_PER_KM;
+      if (toKey === 'mi') converted = meters / METERS_PER_MILE;
+
+      const formulas = {
+        'm->km': {
+          formula: 'm ÷ 1000',
+          calculation: `${formatMathNumber(value)} ÷ 1000 = ${formatMathNumber(converted)}`,
+        },
+        'km->m': {
+          formula: 'km × 1000',
+          calculation: `${formatMathNumber(value)} × 1000 = ${formatMathNumber(converted)}`,
+        },
+        'm->mi': {
+          formula: 'm ÷ 1609.344',
+          calculation: `${formatMathNumber(value)} ÷ 1609.344 = ${formatMathNumber(converted)}`,
+        },
+        'mi->m': {
+          formula: 'mi × 1609.344',
+          calculation: `${formatMathNumber(value)} × 1609.344 = ${formatMathNumber(converted)}`,
+        },
+        'km->mi': {
+          formula: '(km × 1000) ÷ 1609.344',
+          calculation: `(${formatMathNumber(value)} × 1000) ÷ 1609.344 = ${formatMathNumber(converted)}`,
+        },
+        'mi->km': {
+          formula: '(mi × 1609.344) ÷ 1000',
+          calculation: `(${formatMathNumber(value)} × 1609.344) ÷ 1000 = ${formatMathNumber(converted)}`,
+        },
+      };
+
+      const meta = formulas[`${fromKey}->${toKey}`];
+      return {
+        result: converted,
+        formula: meta.formula,
+        calculation: meta.calculation,
+      };
+    }
+
+    /**
+     * Exibe mensagem amigável e botões de ajuste rápido quando as grandezas não combinam.
+     */
+    function renderIncompatible(from, to) {
+      validStateEl.classList.add('hidden');
+      incompatibleStateEl.classList.remove('hidden');
+
+      resultBoxEl.className =
+        'rounded-2xl bg-gradient-to-r from-fuchsia-500/10 via-violet-500/10 to-sky-500/10 border border-fuchsia-300 p-4 sm:p-5 transition';
+
+      incompatibleTitleEl.textContent = `Não é possível converter ${from.label} em ${to.label}`;
+      incompatibleDescEl.textContent = `Você selecionou ${from.name} (${from.symbol}) e ${to.name} (${to.symbol}). Escolha duas unidades de ${from.label} para converter:`;
+
+      const candidates = Object.values(UNITS).filter(
+        (u) => u.category === from.category && u.key !== from.key
+      );
+
+      quickFixButtonsEl.innerHTML = '';
+      candidates.forEach((candidate) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className =
+          'px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-fuchsia-600 hover:opacity-95 shadow-xs transition cursor-pointer';
+        btn.textContent = `Trocar destino para ${candidate.symbol}`;
+        btn.addEventListener('click', () => {
+          toUnitEl.value = candidate.key;
+          updateUI();
+        });
+        quickFixButtonsEl.appendChild(btn);
+      });
+    }
+
+    /**
+     * Atualiza toda a interface de acordo com o valor e unidades escolhidas.
+     */
+    function updateUI() {
+      const from = UNITS[fromUnitEl.value];
+      const to = UNITS[toUnitEl.value];
+
+      unitBadgeEl.textContent = from.symbol;
+
+      const rawText = inputValueEl.value.trim();
+      const parsed = Number(rawText);
+
+      if (rawText === '' || !Number.isFinite(parsed)) {
+        incompatibleStateEl.classList.add('hidden');
+        validStateEl.classList.remove('hidden');
+        resultBoxEl.className =
+          'rounded-2xl bg-slate-100/90 border border-slate-200 p-4 sm:p-5 transition';
+        resultValueEl.textContent = `— ${to.symbol}`;
+        formulaTextEl.textContent = 'Aguardando número';
+        calculationTextEl.textContent = `Digite um valor em ${from.name} (${from.symbol})`;
+        return;
+      }
+
+      if (from.category !== to.category) {
+        renderIncompatible(from, to);
+        return;
+      }
+
+      incompatibleStateEl.classList.add('hidden');
+      validStateEl.classList.remove('hidden');
+      resultBoxEl.className =
+        'rounded-2xl bg-gradient-to-r from-violet-600/10 via-indigo-600/10 to-fuchsia-600/10 border border-violet-200/90 p-4 sm:p-5 transition';
+
+      const output = convertUnits(parsed, from.key, to.key);
+      resultValueEl.textContent = `${formatDisplayNumber(output.result)} ${to.symbol}`;
+      formulaTextEl.textContent = output.formula;
+      calculationTextEl.textContent = output.calculation;
+    }
+
+    // Listeners de eventos
+    fromUnitEl.addEventListener('change', updateUI);
+    toUnitEl.addEventListener('change', updateUI);
+    inputValueEl.addEventListener('input', updateUI);
+
+    swapBtnEl.addEventListener('click', () => {
+      const temp = fromUnitEl.value;
+      fromUnitEl.value = toUnitEl.value;
+      toUnitEl.value = temp;
+      updateUI();
+    });
+
+    clearBtnEl.addEventListener('click', () => {
+      inputValueEl.value = '';
+      inputValueEl.focus();
+      updateUI();
+    });
+
+    presetButtonsEl.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const [val, from, to] = btn.dataset.preset.split('|');
+        inputValueEl.value = val;
+        fromUnitEl.value = from;
+        toUnitEl.value = to;
+        updateUI();
+      });
+    });
+
+    // Calcula o resultado inicial ao carregar
+    updateUI();
+  </script>
 </body>
 </html>
