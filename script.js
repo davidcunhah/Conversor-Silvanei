@@ -1,37 +1,136 @@
-// Selecionando os elementos do DOM
-const inputValor = document.getElementById('valor');
-const selectTipo = document.getElementById('tipo-conversao');
-const btnConverter = document.getElementById('btn-converter');
-const textoResultado = document.getElementById('resultado-texto');
+const valorEntrada = document.getElementById("valor-entrada");
+const unidadeOrigem = document.getElementById("unidade-origem");
+const unidadeDestino = document.getElementById("unidade-destino");
+const btnInverter = document.getElementById("btn-inverter");
+const resultadoBox = document.getElementById("resultado-box");
+const valorResultado = document.getElementById("valor-resultado");
+const formulaTexto = document.getElementById("formula-texto");
+const presetButtons = document.querySelectorAll(".preset-btn");
 
-// Função principal de conversão
-function realizarConversao() {
-    const valor = parseFloat(inputValor.value);
-    const tipo = selectTipo.value;
+const CATEGORIAS = {
+  c: "temperatura",
+  f: "temperatura",
+  m: "distancia",
+  km: "distancia",
+  mi: "distancia",
+};
 
-    // Validação de dados de entrada exigida no trabalho
-    if (isNaN(valor)) {
-        textoResultado.textContent = "Erro: Por favor, insira um número válido!";
-        textoResultado.style.color = "red";
-        return;
-    }
+const SIMBOLOS = {
+  c: "°C",
+  f: "°F",
+  m: "m",
+  km: "km",
+  mi: "mi",
+};
 
-    textoResultado.style.color = "#333"; // Reseta a cor de erro
-    let resultadoCalculado = 0;
-    let mensagemFinal = "";
+const PARA_METROS = {
+  m: 1,
+  km: 1000,
+  mi: 1609.344,
+};
 
-    // Estrutura lógica limpa
-    if (tipo === 'c-to-f') {
-        resultadoCalculado = (valor * 9/5) + 32;
-        mensagemFinal = `${valor} °C equivalem a ${resultadoCalculado.toFixed(2)} °F`;
-    } else if (tipo === 'km-to-mi') {
-        resultadoCalculado = valor * 0.621371;
-        mensagemFinal = `${valor} km equivalem a ${resultadoCalculado.toFixed(2)} milhas`;
-    }
+const FORMULAS = {
+  "c->f": "Fórmula: (°C × 9/5) + 32",
+  "f->c": "Fórmula: (°F − 32) × 5/9",
+  "m->km": "Fórmula: m ÷ 1.000",
+  "km->m": "Fórmula: km × 1.000",
+  "m->mi": "Fórmula: m ÷ 1.609,344",
+  "mi->m": "Fórmula: mi × 1.609,344",
+  "km->mi": "Fórmula: km ÷ 1,609344",
+  "mi->km": "Fórmula: mi × 1,609344",
+};
 
-    // Manipulação dinâmica do DOM
-    textoResultado.textContent = mensagemFinal;
+function formatarNumero(num) {
+  if (!Number.isFinite(num)) return "—";
+  const arredondado = Math.round(num * 1e6) / 1e6;
+  return arredondado.toLocaleString("pt-BR", {
+    maximumFractionDigits: 6,
+  });
 }
 
-// Escuta de eventos
-btnConverter.addEventListener('click', realizarConversao);
+function converter(valor, origem, destino) {
+  if (origem === destino) {
+    return {
+      ok: true,
+      valorConvertido: valor,
+      formula: "Mesma unidade: valor mantido",
+    };
+  }
+
+  if (CATEGORIAS[origem] !== CATEGORIAS[destino]) {
+    return {
+      ok: false,
+      mensagem: "Não é possível converter temperatura diretamente para distância.",
+      formula: "Escolha duas unidades de temperatura ou duas de distância.",
+    };
+  }
+
+  if (CATEGORIAS[origem] === "temperatura") {
+    const convertido =
+      origem === "c" ? (valor * 9) / 5 + 32 : ((valor - 32) * 5) / 9;
+
+    return {
+      ok: true,
+      valorConvertido: convertido,
+      formula: FORMULAS[`${origem}->${destino}`],
+    };
+  }
+
+  const emMetros = valor * PARA_METROS[origem];
+  const convertido = emMetros / PARA_METROS[destino];
+
+  return {
+    ok: true,
+    valorConvertido: convertido,
+    formula: FORMULAS[`${origem}->${destino}`],
+  };
+}
+
+function atualizarTela() {
+  const raw = valorEntrada.value.trim();
+  const origem = unidadeOrigem.value;
+  const destino = unidadeDestino.value;
+
+  if (raw === "" || Number.isNaN(Number(raw))) {
+    resultadoBox.classList.remove("is-error");
+    valorResultado.textContent = `— ${SIMBOLOS[destino]}`;
+    formulaTexto.textContent = "Digite um valor numérico para converter.";
+    return;
+  }
+
+  const numero = Number(raw);
+  const res = converter(numero, origem, destino);
+
+  if (!res.ok) {
+    resultadoBox.classList.add("is-error");
+    valorResultado.textContent = res.mensagem;
+    formulaTexto.textContent = res.formula;
+    return;
+  }
+
+  resultadoBox.classList.remove("is-error");
+  valorResultado.textContent = `${formatarNumero(res.valorConvertido)} ${SIMBOLOS[destino]}`;
+  formulaTexto.textContent = res.formula;
+}
+
+btnInverter.addEventListener("click", () => {
+  const temp = unidadeOrigem.value;
+  unidadeOrigem.value = unidadeDestino.value;
+  unidadeDestino.value = temp;
+  atualizarTela();
+});
+
+presetButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    valorEntrada.value = btn.dataset.val;
+    unidadeOrigem.value = btn.dataset.from;
+    unidadeDestino.value = btn.dataset.to;
+    atualizarTela();
+  });
+});
+
+valorEntrada.addEventListener("input", atualizarTela);
+unidadeOrigem.addEventListener("change", atualizarTela);
+unidadeDestino.addEventListener("change", atualizarTela);
+
+atualizarTela();

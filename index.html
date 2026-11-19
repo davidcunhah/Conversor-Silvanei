@@ -1,43 +1,83 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Universal</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversor de Unidades</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <h1>Conversor Universal</h1>
+  <main class="container">
+    <header class="header">
+      <h1>Conversor de Unidades</h1>
+      <p>Temperatura (°C, °F) e Distância (m, km, mi)</p>
     </header>
 
-    <main>
-        <section class="conversor-container">
-            <!-- O uso de form, label e button é obrigatório -->
-            <form id="form-conversor">
-                <label for="valor">Digite o valor:</label>
-                <input type="number" id="valor" placeholder="Ex: 100" required>
+    <section class="card" aria-label="Conversor de unidades">
+      <div class="input-group">
+        <label for="valor-entrada">Valor</label>
+        <input
+          type="number"
+          id="valor-entrada"
+          step="any"
+          placeholder="Digite um número..."
+          value="25"
+        />
+      </div>
 
-                <label for="tipo-conversao">Escolha a conversão:</label>
-                <select id="tipo-conversao">
-                    <option value="c-to-f">Celsius para Fahrenheit</option>
-                    <option value="km-to-mi">Quilômetros para Milhas</option>
-                </select>
+      <div class="selectors-row">
+        <div class="select-group">
+          <label for="unidade-origem">De</label>
+          <select id="unidade-origem">
+            <option value="c">Celsius (°C)</option>
+            <option value="f">Fahrenheit (°F)</option>
+            <option value="m">Metros (m)</option>
+            <option value="km">Quilômetros (km)</option>
+            <option value="mi">Milhas (mi)</option>
+          </select>
+        </div>
 
-                <button type="button" id="btn-converter">Converter</button>
-            </form>
+        <button
+          type="button"
+          id="btn-inverter"
+          class="swap-btn"
+          title="Inverter unidades"
+          aria-label="Inverter unidades de origem e destino"
+        >
+          ⇄
+        </button>
 
-            <article id="resultado-box">
-                <h2>Resultado:</h2>
-                <p id="resultado-texto">Aguardando conversão...</p>
-            </article>
-        </section>
-    </main>
+        <div class="select-group">
+          <label for="unidade-destino">Para</label>
+          <select id="unidade-destino">
+            <option value="f" selected>Fahrenheit (°F)</option>
+            <option value="c">Celsius (°C)</option>
+            <option value="m">Metros (m)</option>
+            <option value="km">Quilômetros (km)</option>
+            <option value="mi">Milhas (mi)</option>
+          </select>
+        </div>
+      </div>
 
-    <footer>
-        <p>Desenvolvido para o Trabalho Prático de Web</p>
-    </footer>
+      <div class="result-box" id="resultado-box" aria-live="polite">
+        <span class="result-label">Resultado</span>
+        <div class="result-value" id="valor-resultado">77 °F</div>
+        <div class="result-formula" id="formula-texto">Fórmula: (°C × 9/5) + 32</div>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="presets">
+        <span class="presets-label">Atalhos rápidos:</span>
+        <div class="presets-list">
+          <button type="button" class="preset-btn" data-val="0" data-from="c" data-to="f">0 °C → °F</button>
+          <button type="button" class="preset-btn" data-val="100" data-from="c" data-to="f">100 °C → °F</button>
+          <button type="button" class="preset-btn" data-val="1" data-from="km" data-to="mi">1 km → mi</button>
+          <button type="button" class="preset-btn" data-val="1" data-from="mi" data-to="km">1 mi → km</button>
+          <button type="button" class="preset-btn" data-val="1000" data-from="m" data-to="km">1000 m → km</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
